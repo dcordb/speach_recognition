@@ -17,4 +17,4 @@ def read_corpus():
         yield text, wav
 
 
-fs, data = wavfile.read('./output/audio.wav')
+# fs, data = wavfile.read('./output/audio.wav')
