@@ -5,7 +5,6 @@ from nltk.corpus import PlaintextCorpusReader as pcr
 corpus_dir = 'data'
 wav_files = corpus_dir + '/wav48'
 
-
 def read_corpus():
     my_corpus = pcr(corpus_dir, r'.*\.txt')
 
