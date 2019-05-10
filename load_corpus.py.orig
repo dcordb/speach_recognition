@@ -6,8 +6,12 @@ import csv
 corpus_dir = 'data'
 wav_files = corpus_dir + '/wav48'
 
+<<<<<<< HEAD
 
 def gen_cvs():
+=======
+def read_corpus():
+>>>>>>> github/master
     my_corpus = pcr(corpus_dir, r'.*\.txt')
     data = [['filename', 'transcript']]
     for f_name in my_corpus.fileids():
