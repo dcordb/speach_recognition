@@ -5,8 +5,6 @@ from scipy.fftpack import dct
 
 NFFT = 512
 
-sample_rate, signal = scipy.io.wavfile.read('come_on_1.wav')
-
 def get_frames(sample_rate, signal):
 	alpha = 0.97
 	emphasized_signal = np.append(signal[0], signal[1:] - alpha * signal[:-1])
@@ -30,13 +28,17 @@ def get_frames(sample_rate, signal):
 
 	return frames
 
-def power_spectrum_fft():
+def power_spectrum_fft(sample_rate, signal): #gives fft power spectrum
 	frames = get_frames(sample_rate, signal)
 	mag_frames = np.absolute(np.fft.rfft(frames, NFFT))  # Magnitude of the FFT
 	pow_frames = ((1.0 / NFFT) * ((mag_frames) ** 2)) #power spectrum
 	return pow_frames
 
-def power_spectrum_wavelet():
+def power_spectrum_wavelet(sample_rate, signal): #gives wavelet power spectrum (I hope!)
 	frames = get_frames(sample_rate, signal)
 	(x, y) = pywt.dwt(frames, 'haar')
 	return np.append(x, y)
+
+def get_spectrums(file): #give both spectrums given a file
+	sample_rate, signal = scipy.io.wavfile.read(file)
+	return (power_spectrum_fft(sample_rate, signal), power_spectrum_wavelet(sample_rate, signal))

@@ -1,10 +1,9 @@
 from scipy.io import wavfile
-# import nltk
 from nltk.corpus import PlaintextCorpusReader as pcr
 import csv
-import random
+from random import shuffle
 
-corpus_dir = 'data'
+corpus_dir = '/media/daniel/31B9D577341E99F0/Programming/VCTK-Corpus/' #add correct dir address here!
 wav_files = corpus_dir + '/wav48'
 
 
@@ -26,7 +25,8 @@ def clean(word):
 
 def gen_cvs():
     my_corpus = pcr(corpus_dir, r'.*\.txt')
-    data = [['filename', 'transcript']]
+    data = [[]]
+
     for f_name in my_corpus.fileids():
         if 'txt/p' not in f_name:
             continue
@@ -34,27 +34,39 @@ def gen_cvs():
         file_raw = clean(my_corpus.raw(f_name)[0:len(my_corpus.raw(f_name)) - 1])
         data.append([wav, file_raw])
 
-    random.shuffle(data)
+    print('Processed', len(data), 'files')
+
+    print('Shuffling data')
+
+    shuffle(data) #suffle first the data
+    data.insert(0, ['filename', 'transcript']) #add the headers
+
+    print('Saving test.csv...')
 
     with open('data/test.csv', 'w') as csv_train:
         writer = csv.writer(csv_train)
-        writer.writerows(data[:220])
+        writer.writerows([data[0]]+data[220:])
 
     csv_train.close()
+    print('Done')
+    
+    print('Saving validator.csv...')
 
     with open('data/validator.csv', 'w') as csv_test:
         writer = csv.writer(csv_test)
         writer.writerows([data[0]]+data[220:440])
 
     csv_test.close()
+    print('Done')
+    
+    print('Saving train.csv...')
 
     with open('data/train.csv', 'w') as csv_test:
         writer = csv.writer(csv_test)
         writer.writerows([data[0]]+data[440:])
 
     csv_test.close()
+    print('Done')
 
 
 gen_cvs()
-
-# fs, data = wavfile.read('./output/audio.wav')
