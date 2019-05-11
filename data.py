@@ -47,8 +47,6 @@ def combine_all_wavs_and_trans_from_csvs(csvslist, sortagrad=False, createwordli
         df_final = df_all[df_all['transcript'].map(len) <= 280]
     else:
         df_final = df_all
-
-    print(df_all)
     
     listcomb = df_all['transcript'].tolist()
     print("Total number of files:", len(listcomb))
