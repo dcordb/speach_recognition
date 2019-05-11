@@ -3,7 +3,7 @@ from nltk.corpus import PlaintextCorpusReader as pcr
 import csv
 from random import shuffle
 
-corpus_dir = '/media/daniel/31B9D577341E99F0/Programming/VCTK-Corpus/' #add correct dir address here!
+corpus_dir = '/media/daniel/31B9D577341E99F0/Programming/VCTK-Corpus' #add correct dir address here!
 wav_files = corpus_dir + '/wav48'
 
 
@@ -20,6 +20,7 @@ def clean(word):
     new = new.replace('\'', '')
     new = new.replace(')', '')
     new = new.replace('(', '')
+    new = new.replace('`', '')
     return new
 
 
