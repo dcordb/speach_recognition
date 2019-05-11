@@ -3,7 +3,12 @@ import scipy.io.wavfile
 import pywt
 from scipy.fftpack import dct
 
+import data
+from utils.feature_utils import *
+
 NFFT = 512
+
+path_whole_data = "data/validator.csv"
 
 def get_frames(sample_rate, signal):
 	alpha = 0.97
@@ -42,3 +47,30 @@ def power_spectrum_wavelet(sample_rate, signal): #gives wavelet power spectrum (
 def get_spectrums(file): #give both spectrums given a file
 	sample_rate, signal = scipy.io.wavfile.read(file)
 	return (power_spectrum_fft(sample_rate, signal), power_spectrum_wavelet(sample_rate, signal))
+
+#MAX_FFT_SIZE
+#MAX_WAVELET_SIZE
+
+def get_sizes():
+	_, df = data.combine_all_wavs_and_trans_from_csvs(path_whole_data)
+
+	indices = [ i for i in range(len(df)) ]
+	path_audio, transcript = load_audio(df, indices)
+
+	max_len_fft = 0
+	max_len_wavelet = 0
+
+	for path in path_audio:
+		print('Calculating spectrums of', path)
+		fft, wavelet = get_spectrums(path)
+
+		print('Done with', path)
+
+		max_len_fft = max(max_len_fft, len(fft))
+		max_len_wavelet = max(max_len_wavelet, len(wavelet))
+
+	# return (max_len_fft, max_len_wavelet)
+
+if __name__ == '__main__':
+	x, y = get_sizes()
+	print('fft max size', x, 'wavelet max size', y)

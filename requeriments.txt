@@ -1,0 +1,9 @@
+Tensorflow
+pyaudio
+librosa
+pandas
+SoundFile
+matplotlib
+Keras
+h5py
+numpy

@@ -42,9 +42,18 @@ def gen_cvs():
     shuffle(data) #suffle first the data
     data.insert(0, ['filename', 'transcript']) #add the headers
 
+    print('Saving whole_data.csv...') #this data isnt for training or testing
+
+    with open('neural_net_scripts/data/whole_data.csv', 'w') as csv_whole:
+        writer = csv.writer(csv_whole)
+        writer.writerows(data)
+
+    csv_whole.close()
+    print('Done')
+
     print('Saving test.csv...')
 
-    with open('data/test.csv', 'w') as csv_train:
+    with open('neural_net_scripts/data/test.csv', 'w') as csv_train:
         writer = csv.writer(csv_train)
         writer.writerows([data[0]]+data[220:])
 
@@ -53,16 +62,16 @@ def gen_cvs():
     
     print('Saving validator.csv...')
 
-    with open('data/validator.csv', 'w') as csv_test:
-        writer = csv.writer(csv_test)
+    with open('neural_net_scripts/data/validator.csv', 'w') as csv_validator:
+        writer = csv.writer(csv_validator)
         writer.writerows([data[0]]+data[220:440])
 
-    csv_test.close()
+    csv_validator.close()
     print('Done')
     
     print('Saving train.csv...')
 
-    with open('data/train.csv', 'w') as csv_test:
+    with open('neural_net_scripts/data/train.csv', 'w') as csv_test:
         writer = csv.writer(csv_test)
         writer.writerows([data[0]]+data[440:])
 
