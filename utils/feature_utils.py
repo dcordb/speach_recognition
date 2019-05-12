@@ -77,7 +77,6 @@ def extract_mel_spectrogram_and_pad(frames, sr, max_pad_length, frame_length, ho
 
     return spectrogram_padded, x_length
 
-
 def convert_and_pad_transcripts(y_data_raw):
     """
     Converts and pads transcripts from text to int sequences

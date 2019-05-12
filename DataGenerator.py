@@ -10,6 +10,10 @@ from librosa.feature import mfcc, melspectrogram
 from utils.feature_utils import load_audio, convert_and_pad_transcripts, extract_mfcc_and_pad, \
     extract_mel_spectrogram_and_pad
 
+import get_features
+
+from get_features import MAX_FFT_SIZE, MAX_WAVELET_SIZE
+
 
 class DataGenerator(Sequence):
     """
@@ -28,7 +32,7 @@ class DataGenerator(Sequence):
     """
 
     def __init__(self, df, feature_type='mfcc', batch_size=32, frame_length=320, hop_length=160, n_mels=40,
-                 mfcc_features=26, fft_features, wavelet_features, epoch_length=0, shuffle=True):
+                 mfcc_features=26, epoch_length=0, shuffle=True):
         self.df = df.copy()
         self.type = feature_type
         self.batch_size = batch_size
@@ -36,8 +40,6 @@ class DataGenerator(Sequence):
         self.hop_length = hop_length
         self.mfcc_features = mfcc_features
         self.n_mels = n_mels
-        self.fft_features = fft_features
-        self.wavelet_features = wavelet_features
         self.epoch_length = epoch_length
         self.shuffle = shuffle
 
@@ -140,12 +142,24 @@ class DataGenerator(Sequence):
             input_length = np.array(len_x_seq)
             return x_data, input_length
 
-        elif self.type == 'fft':
-            pass #modify here fft
+        elif self.type == 'fft' or self.type == 'wavelet':
+            ftt, wavelet = get_features.get_spectrums(sr, x_data_raw)
 
-        else: #modify here wavelet
-            pass
+            if self.type == 'fft':
+                assert(len(fft) <= MAX_FFT_SIZE)
 
+                while len(fft) < MAX_FFT_SIZE:
+                    np.append(fft, 0)
+
+                return fft
+
+            else:
+                assert(len(wavelet) <= MAX_WAVELET_SIZE)
+
+                while len(wavelet) < MAX_WAVELET_SIZE:
+                    np.append(wavelet, 0)
+
+                return wavelet
         else:
             raise ValueError('Not a valid feature type: ', self.type)
 
@@ -167,6 +181,14 @@ class DataGenerator(Sequence):
             spectrogram = melspectrogram(frames, sr, n_fft=self.frame_length, hop_length=self.hop_length,
                                          n_mels=self.n_mels)
             return spectrogram.shape[1]
+
+        elif self.type == 'fft' or self.type == 'wavelet':
+            ftt, wavelet = get_features.get_spectrums(sr, frames)
+
+            if self.type == 'fft':
+                return fft.shape[0]
+
+            else: return wavelet.shape[0]
 
         else:
             raise ValueError('Not a valid feature type: ', self.type)

@@ -44,7 +44,7 @@ def gen_cvs():
 
     print('Saving whole_data.csv...') #this data isnt for training or testing
 
-    with open('neural_net_scripts/data/whole_data.csv', 'w') as csv_whole:
+    with open('data/whole_data.csv', 'w') as csv_whole:
         writer = csv.writer(csv_whole)
         writer.writerows(data)
 
@@ -53,16 +53,17 @@ def gen_cvs():
 
     print('Saving test.csv...')
 
-    with open('neural_net_scripts/data/test.csv', 'w') as csv_train:
+    with open('data/test.csv', 'w') as csv_train:
         writer = csv.writer(csv_train)
-        writer.writerows([data[0]]+data[220:])
+        # writer.writerows([data[0]]+data[220:])
+        writer.writerows([data[0]]+data[0:220])
 
     csv_train.close()
     print('Done')
     
     print('Saving validator.csv...')
 
-    with open('neural_net_scripts/data/validator.csv', 'w') as csv_validator:
+    with open('data/validator.csv', 'w') as csv_validator:
         writer = csv.writer(csv_validator)
         writer.writerows([data[0]]+data[220:440])
 
@@ -71,9 +72,10 @@ def gen_cvs():
     
     print('Saving train.csv...')
 
-    with open('neural_net_scripts/data/train.csv', 'w') as csv_test:
+    with open('data/train.csv', 'w') as csv_test:
         writer = csv.writer(csv_test)
-        writer.writerows([data[0]]+data[440:])
+        # writer.writerows([data[0]]+data[440:])
+        writer.writerows([data[0]]+data[440:660])
 
     csv_test.close()
     print('Done')

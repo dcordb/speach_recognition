@@ -13,6 +13,8 @@ from DataGenerator import DataGenerator
 from LossCallback import LossCallback
 from data import combine_all_wavs_and_trans_from_csvs
 
+from get_features import MAX_FFT_SIZE, MAX_WAVELET_SIZE
+
 
 def main(args):
     # Paths to .csv files
@@ -88,9 +90,9 @@ def main(args):
         input_dim = n_mels
 
     elif feature_type == 'fft':
-        input_dim = fft_features
+        input_dim = MAX_FFT_SIZE
 
-    else: input_dim = wavelet_features
+    else: input_dim = MAX_WAVELET_SIZE
 
     output_dim = 35  # Output dim: features to predict + 1 for the CTC blank prediction
 
@@ -234,7 +236,7 @@ if __name__ == '__main__':
 
     # Preprocessing params
     parser.add_argument('--feature_type', type=str, default='mfcc',
-                        help='Feature extraction method: mfcc, spectrogram, fourier power spectrum or wavelet power spectrum.')
+                        help='Feature extraction method: mfcc, spectrogram, fft (fourier power spectrum) or wavelet (wavelet power spectrum).')
     parser.add_argument('--mfccs', type=int, default=26,
                         help='Number of mfcc features per frame to extract.')
     parser.add_argument('--mels', type=int, default=40,
