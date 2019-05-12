@@ -7,3 +7,4 @@ matplotlib
 Keras
 h5py
 numpy
+pywt

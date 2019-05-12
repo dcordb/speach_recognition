@@ -81,12 +81,12 @@ class DataGenerator(Sequence):
         x_data, input_length = self.extract_features_and_pad(x_data_raw, sr)
         y_data, label_length = convert_and_pad_transcripts(y_data_raw)
 
-        # print ("\nx_data shape: ", x_data.shape)
-        # print ("y_data shape: ", y_data.shape)
-        # print ("input_length shape: ", input_length.shape)
-        # print ("label_length shape: ", label_length.shape)
-        # print ("input length: ", input_length)
-        # print ("label_length: ", label_length, "\n")
+        print ("\nx_data shape: ", x_data.shape)
+        print ("y_data shape: ", y_data.shape)
+        print ("input_length shape: ", input_length.shape)
+        print ("label_length shape: ", label_length.shape)
+        print ("input length: ", input_length)
+        print ("label_length: ", label_length, "\n")
 
         inputs = {'the_input': x_data,
                   'the_labels': y_data,
@@ -143,23 +143,33 @@ class DataGenerator(Sequence):
             return x_data, input_length
 
         elif self.type == 'fft' or self.type == 'wavelet':
-            ftt, wavelet = get_features.get_spectrums(sr, x_data_raw)
+            res = np.array()
+            lens = []
 
-            if self.type == 'fft':
-                assert(len(fft) <= MAX_FFT_SIZE)
+            for i in range(len(x_data_raw)):
+                fft, wavelet = get_features.get_spectrums(sr, x_data_raw[i])
 
-                while len(fft) < MAX_FFT_SIZE:
-                    np.append(fft, 0)
+                if self.type == 'fft':
+                    assert(len(fft) <= MAX_FFT_SIZE)
 
-                return fft
+                    while len(fft) < MAX_FFT_SIZE:
+                        np.append(fft, 0)
 
-            else:
-                assert(len(wavelet) <= MAX_WAVELET_SIZE)
+                    res = np.insert(res, i, fft, axis = 0)
+                    lens.append(len(fft))
 
-                while len(wavelet) < MAX_WAVELET_SIZE:
-                    np.append(wavelet, 0)
+                else:
+                    assert(len(wavelet) <= MAX_WAVELET_SIZE)
 
-                return wavelet
+                    while len(wavelet) < MAX_WAVELET_SIZE:
+                        np.append(wavelet, 0)
+
+                    res = np.insert(res, i, wavelet, axis = 0)
+                    lens.append(len(wavelet))
+
+            lens = np.array(lens)
+            return res, lens
+
         else:
             raise ValueError('Not a valid feature type: ', self.type)
 
@@ -183,12 +193,14 @@ class DataGenerator(Sequence):
             return spectrogram.shape[1]
 
         elif self.type == 'fft' or self.type == 'wavelet':
-            ftt, wavelet = get_features.get_spectrums(sr, frames)
+            # fft, wavelet = get_features.get_spectrums(sr, frames)
 
-            if self.type == 'fft':
-                return fft.shape[0]
+            # if self.type == 'fft':
+            #     return fft.shape[0]
 
-            else: return wavelet.shape[0]
+            # else: return wavelet.shape[0]
+
+            return 0
 
         else:
             raise ValueError('Not a valid feature type: ', self.type)

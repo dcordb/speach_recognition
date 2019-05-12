@@ -44,7 +44,8 @@ def power_spectrum_wavelet(sample_rate, signal): #gives wavelet power spectrum (
 	# return np.append(x, y)
 	return x
 
-def get_spectrums(sample_rate, signal): #give both spectrums given a file
+def get_spectrums(sample_rate, signal): #give both spectrums
+	print(sample_rate, signal.ndim, signal.shape)
 	return (power_spectrum_fft(sample_rate, signal), power_spectrum_wavelet(sample_rate, signal))
 
 MAX_FFT_SIZE = 3000
